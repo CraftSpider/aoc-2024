@@ -46,25 +46,6 @@ fn check_xmas(matrix: &Vec<Vec<char>>, x: usize, y: usize) -> u32 {
     out
 }
 
-/* Possible Forms:
-
-M.M
-.A.
-S.S
-
-M.S
-.A.
-M.S
-
-S.M
-.A.
-S.M
-
-S.S
-.A.
-M.M
-*/
-
 fn check_x_mas(window: &((char, char, char), (char, char, char), (char, char, char))) -> bool {
     if window.1 .1 != 'A' {
         return false;
