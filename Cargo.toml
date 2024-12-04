@@ -29,3 +29,4 @@ tinyjson = "2.5.1"
 
 # Solution dependencies
 chumsky = "1.0.0-alpha.7"
+itertools = "0.13"
