@@ -1,4 +1,4 @@
-use advent_of_code::Parser;
+use advent_of_code::{int_u32, Parser};
 use chumsky::prelude::*;
 use std::str::FromStr;
 
@@ -31,9 +31,7 @@ fn validate(report: &[u32]) -> Result<(), usize> {
 }
 
 fn parser<'a>() -> Parser!['a, Vec<Vec<u32>>] {
-    text::int(10)
-        .map(u32::from_str)
-        .unwrapped()
+    int_u32()
         .separated_by(just(' '))
         .at_least(1)
         .collect()

@@ -1,16 +1,14 @@
 advent_of_code::solution!(1);
 
-use advent_of_code::Parser;
+use advent_of_code::{int_u32, Parser};
 use chumsky::prelude::*;
 use std::collections::HashMap;
 use std::str::FromStr;
 
 fn parser<'a>() -> Parser!['a, Vec<(u32, u32)>] {
-    text::int(10)
-        .map(u32::from_str)
-        .unwrapped()
+    int_u32()
         .padded()
-        .then(text::int(10).map(u32::from_str).unwrapped())
+        .then(int_u32())
         .separated_by(just('\n'))
         .allow_trailing()
         .collect()
