@@ -30,3 +30,7 @@ tinyjson = "2.5.1"
 # Solution dependencies
 chumsky = "1.0.0-alpha.7"
 itertools = "0.13"
+numeric = { git = "https://github.com/craftspider/numeric" }
+
+[patch."https://github.com/craftspider/numeric"]
+numeric = { path = "../numeric/crates/numeric" }
