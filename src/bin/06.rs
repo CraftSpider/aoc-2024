@@ -188,8 +188,6 @@ pub fn part_one(input: &str) -> Option<u32> {
     Some(visited.len() as u32)
 }
 
-// 1966 is too high
-// We apparently are _still_ returning true when we shouldn't in at least one situation
 fn check_loop(map: &Map, mut guard: GuardState) -> bool {
     let mut seen_locs = HashSet::new();
     guard.rotate_right();
