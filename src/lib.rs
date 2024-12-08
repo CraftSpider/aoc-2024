@@ -15,3 +15,7 @@ macro_rules! Parser {
 pub fn int_u32<'a>() -> Parser!['a, u32] {
     text::int(10).map(u32::from_str).unwrapped()
 }
+
+pub fn int_u64<'a>() -> Parser!['a, u64] {
+    text::int(10).map(u64::from_str).unwrapped()
+}
