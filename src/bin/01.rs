@@ -3,7 +3,6 @@ advent_of_code::solution!(1);
 use advent_of_code::{int_u32, Parser};
 use chumsky::prelude::*;
 use std::collections::HashMap;
-use std::str::FromStr;
 
 fn parser<'a>() -> Parser!['a, Vec<(u32, u32)>] {
     int_u32()

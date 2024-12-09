@@ -300,6 +300,7 @@ dependencies = [
 [[package]]
 name = "numeric"
 version = "0.1.0"
+source = "git+https://github.com/craftspider/numeric#b8dadd5f6f49ed2ea1a99bcdf46c907b0c447600"
 dependencies = [
  "numeric-compounds",
  "numeric-ints",
@@ -310,6 +311,7 @@ dependencies = [
 [[package]]
 name = "numeric-bits"
 version = "0.1.0"
+source = "git+https://github.com/craftspider/numeric#b8dadd5f6f49ed2ea1a99bcdf46c907b0c447600"
 dependencies = [
  "numeric-traits",
 ]
@@ -317,6 +319,7 @@ dependencies = [
 [[package]]
 name = "numeric-compounds"
 version = "0.1.0"
+source = "git+https://github.com/craftspider/numeric#b8dadd5f6f49ed2ea1a99bcdf46c907b0c447600"
 dependencies = [
  "numeric-ints",
  "numeric-static-iter",
@@ -327,6 +330,7 @@ dependencies = [
 [[package]]
 name = "numeric-ints"
 version = "0.1.0"
+source = "git+https://github.com/craftspider/numeric#b8dadd5f6f49ed2ea1a99bcdf46c907b0c447600"
 dependencies = [
  "numeric-bits",
  "numeric-static-iter",
@@ -337,6 +341,7 @@ dependencies = [
 [[package]]
 name = "numeric-reals"
 version = "0.1.0"
+source = "git+https://github.com/craftspider/numeric#b8dadd5f6f49ed2ea1a99bcdf46c907b0c447600"
 dependencies = [
  "numeric-traits",
  "numeric-utils",
@@ -345,6 +350,7 @@ dependencies = [
 [[package]]
 name = "numeric-static-iter"
 version = "0.1.0"
+source = "git+https://github.com/craftspider/numeric#b8dadd5f6f49ed2ea1a99bcdf46c907b0c447600"
 dependencies = [
  "numeric-traits",
 ]
@@ -352,10 +358,12 @@ dependencies = [
 [[package]]
 name = "numeric-traits"
 version = "0.1.0"
+source = "git+https://github.com/craftspider/numeric#b8dadd5f6f49ed2ea1a99bcdf46c907b0c447600"
 
 [[package]]
 name = "numeric-utils"
 version = "0.1.0"
+source = "git+https://github.com/craftspider/numeric#b8dadd5f6f49ed2ea1a99bcdf46c907b0c447600"
 
 [[package]]
 name = "object"

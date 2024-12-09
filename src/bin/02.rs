@@ -1,6 +1,5 @@
 use advent_of_code::{int_u32, Parser};
 use chumsky::prelude::*;
-use std::str::FromStr;
 
 advent_of_code::solution!(2);
 

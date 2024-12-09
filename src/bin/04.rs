@@ -81,15 +81,13 @@ pub fn part_two(input: &str) -> Option<u32> {
     let count = input
         .iter()
         .tuple_windows()
-        .enumerate()
-        .map(|(idx, (a, b, c))| {
+        .map(|(a, b, c)| {
             let a = a.iter().copied().tuple_windows::<(_, _, _)>();
             let b = b.iter().copied().tuple_windows::<(_, _, _)>();
             let c = c.iter().copied().tuple_windows::<(_, _, _)>();
 
             itertools::multizip((a, b, c))
-                .enumerate()
-                .filter(|(idx2, val)| check_x_mas(val))
+                .filter(|val| check_x_mas(val))
                 .count()
         })
         .sum::<usize>();
