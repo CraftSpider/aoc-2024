@@ -35,14 +35,22 @@ impl Disk {
         self.data.iter().position(|val| val.is_none()).unwrap()
     }
 
-    fn most_compact(&self) -> bool {
+    fn most_compact_byte(&self) -> bool {
         self.data[self.bytes..].iter().all(|&val| val.is_none())
     }
 
-    fn move_rightmost(&mut self) {
+    fn most_compact_files(&self) -> bool {
+        todo!()
+    }
+
+    fn move_rightmost_byte(&mut self) {
         let byte = self.rightmost_full();
         let empty = self.leftmost_empty();
         self.data.swap(byte, empty);
+    }
+
+    fn move_rightmost_file(&mut self) {
+        todo!()
     }
 
     fn checksum(&self) -> u64 {
@@ -97,15 +105,21 @@ impl Disk {
 pub fn part_one(input: &str) -> Option<u64> {
     let mut disk = Disk::from_input(input);
     // disk.print();
-    while !disk.most_compact() {
-        disk.move_rightmost();
+    while !disk.most_compact_byte() {
+        disk.move_rightmost_byte();
     }
     // disk.print();
     Some(disk.checksum())
 }
 
-pub fn part_two(input: &str) -> Option<u32> {
-    None
+pub fn part_two(input: &str) -> Option<u64> {
+    let mut disk = Disk::from_input(input);
+    // disk.print();
+    while !disk.most_compact_files() {
+        disk.move_rightmost_file();
+    }
+    // disk.print();
+    Some(disk.checksum())
 }
 
 #[cfg(test)]
@@ -121,6 +135,6 @@ mod tests {
     #[test]
     fn test_part_two() {
         let result = part_two(&advent_of_code::template::read_file("examples", DAY));
-        assert_eq!(result, None);
+        assert_eq!(result, Some(2858));
     }
 }
