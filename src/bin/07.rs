@@ -1,7 +1,6 @@
 use advent_of_code::{fast_cartesian::IntoLendingExt, int_u64, Parser};
 use chumsky::prelude::*;
 use gat_lending_iterator::LendingIterator;
-use std::fmt::Write;
 
 advent_of_code::solution!(7);
 
@@ -37,7 +36,6 @@ impl Equation {
     }
 
     fn try_any(&self) -> bool {
-        let mut temp = String::with_capacity(32);
         self.inputs
             .iter()
             .map(|_| [Op::Add, Op::Mul, Op::Concat])
@@ -49,11 +47,7 @@ impl Equation {
                         .fold(self.inputs[0], |acc, (&op, &val)| match op {
                             Op::Add => acc + val,
                             Op::Mul => acc * val,
-                            Op::Concat => {
-                                temp.clear();
-                                write!(temp, "{acc}{val}").unwrap();
-                                temp.parse().unwrap()
-                            }
+                            Op::Concat => acc * 10u64.pow(val.ilog10() + 1) + val,
                         });
                 val == self.answer
             })
