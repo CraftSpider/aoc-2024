@@ -54,7 +54,7 @@ pub fn part_two(input: &str) -> Option<u32> {
 
     let count = reports
         .into_iter()
-        .filter_map(|mut vals| match validate(&vals) {
+        .filter_map(|vals| match validate(&vals) {
             Ok(_) => Some(()),
             Err(fail_idx) => {
                 // Because maybe the first value set the wrong direction

@@ -1,6 +1,8 @@
 use chumsky::{text, Parser};
 use std::str::FromStr;
 
+pub mod fast_cartesian;
+mod size_hint;
 pub mod template;
 
 // Use this file to add helper functions and additional modules.

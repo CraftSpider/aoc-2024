@@ -1,10 +1,11 @@
-use advent_of_code::{int_u64, Parser};
+use advent_of_code::{fast_cartesian::IntoLendingExt, int_u64, Parser};
 use chumsky::prelude::*;
-use itertools::Itertools;
+use gat_lending_iterator::LendingIterator;
+use std::fmt::Write;
 
 advent_of_code::solution!(7);
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 enum Op {
     Add,
     Mul,
@@ -36,6 +37,7 @@ impl Equation {
     }
 
     fn try_any(&self) -> bool {
+        let mut temp = String::with_capacity(32);
         self.inputs
             .iter()
             .map(|_| [Op::Add, Op::Mul, Op::Concat])
@@ -47,7 +49,11 @@ impl Equation {
                         .fold(self.inputs[0], |acc, (&op, &val)| match op {
                             Op::Add => acc + val,
                             Op::Mul => acc * val,
-                            Op::Concat => format!("{acc}{val}").parse().unwrap(),
+                            Op::Concat => {
+                                temp.clear();
+                                write!(temp, "{acc}{val}").unwrap();
+                                temp.parse().unwrap()
+                            }
                         });
                 val == self.answer
             })
