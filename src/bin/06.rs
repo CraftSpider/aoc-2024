@@ -1,5 +1,5 @@
+use advent_of_code::Direction;
 use numeric::compound::vector::Vec2;
-use numeric::traits::ops::checked::{CheckedAdd, CheckedSub};
 use std::collections::HashSet;
 
 advent_of_code::solution!(6);
@@ -34,37 +34,9 @@ impl GuardState {
     }
 }
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
-enum Direction {
-    Up,
-    Down,
-    Right,
-    Left,
-}
-
 enum MoveFail {
     OffMap,
     Blocked,
-}
-
-impl Direction {
-    fn rotate_right(self) -> Direction {
-        match self {
-            Direction::Up => Direction::Right,
-            Direction::Down => Direction::Left,
-            Direction::Left => Direction::Up,
-            Direction::Right => Direction::Down,
-        }
-    }
-
-    fn try_move(self, pos: Vec2<u32>) -> Option<Vec2<u32>> {
-        match self {
-            Direction::Up => pos.checked_add(Vec2::new([0, 1])),
-            Direction::Down => pos.checked_sub(Vec2::new([0, 1])),
-            Direction::Right => pos.checked_add(Vec2::new([1, 0])),
-            Direction::Left => pos.checked_sub(Vec2::new([1, 0])),
-        }
-    }
 }
 
 impl Map {
@@ -72,7 +44,7 @@ impl Map {
         let mut map = Map::default();
 
         let mut size = Vec2::default();
-        for (y, line) in input.rsplit('\n').enumerate() {
+        for (y, line) in input.lines().rev().enumerate() {
             let y = y as u32;
 
             if y > *size.y() {
@@ -91,7 +63,7 @@ impl Map {
                 }
             }
         }
-        map.size = size;
+        map.size = size + 1;
 
         map
     }
@@ -160,7 +132,7 @@ impl Map {
             .direction
             .try_move(state.pos)
             .ok_or(MoveFail::OffMap)?;
-        if next.x() > self.size.x() || next.y() > self.size.y() {
+        if next.x() >= self.size.x() || next.y() >= self.size.y() {
             Err(MoveFail::OffMap)
         } else if self.blocks.contains(&next)
             || state.extra_block.is_some_and(|block| next == block)

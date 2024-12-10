@@ -3,11 +3,7 @@ use itertools::Itertools;
 advent_of_code::solution!(4);
 
 fn make_array(input: &str) -> Vec<Vec<char>> {
-    input
-        .trim()
-        .split("\n")
-        .map(|s| s.chars().collect())
-        .collect()
+    input.lines().map(|s| s.chars().collect()).collect()
 }
 
 fn check_line(

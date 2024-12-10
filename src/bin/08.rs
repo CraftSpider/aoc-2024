@@ -15,7 +15,7 @@ impl Map {
     fn from_input(input: &str) -> Map {
         let mut antennas = BTreeMap::<_, Vec<_>>::new();
         let mut size = Vec2::default();
-        for (y, line) in input.trim().rsplit('\n').enumerate() {
+        for (y, line) in input.lines().rev().enumerate() {
             let y = y as i32;
 
             if y > *size.y() {
