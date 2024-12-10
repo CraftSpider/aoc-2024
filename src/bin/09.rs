@@ -1,4 +1,3 @@
-use itertools::Itertools;
 use std::iter;
 use std::iter::from_fn;
 use std::ops::Range;
@@ -32,22 +31,14 @@ impl Disk {
         Disk { data, bytes, files }
     }
 
-    fn rightmost_full(&self) -> usize {
-        self.data.iter().rposition(|val| val.is_some()).unwrap()
-    }
-
-    fn leftmost_empty(&self) -> usize {
-        self.data.iter().position(|val| val.is_none()).unwrap()
-    }
-
-    fn most_compact_byte(&self) -> bool {
-        self.data[self.bytes..].iter().all(|&val| val.is_none())
-    }
-
-    fn move_rightmost_byte(&mut self) {
-        let byte = self.rightmost_full();
-        let empty = self.leftmost_empty();
-        self.data.swap(byte, empty);
+    fn compress_bytes(&mut self) {
+        let (left, right) = self.data.split_at_mut(self.bytes);
+        let slots = left.iter_mut().filter(|v| v.is_none());
+        let bytes = right.iter_mut().rev().filter(|v| v.is_some());
+        slots.zip(bytes).for_each(|(slot, byte)| {
+            *slot = *byte;
+            *byte = None;
+        });
     }
 
     fn iter_empty_range(&self) -> impl Iterator<Item = Range<usize>> + '_ {
@@ -150,9 +141,7 @@ impl Disk {
 pub fn part_one(input: &str) -> Option<u64> {
     let mut disk = Disk::from_input(input);
     // disk.print();
-    while !disk.most_compact_byte() {
-        disk.move_rightmost_byte();
-    }
+    disk.compress_bytes();
     // disk.print();
     Some(disk.checksum())
 }
