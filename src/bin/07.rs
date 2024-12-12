@@ -18,7 +18,7 @@ struct Equation {
 
 impl Equation {
     fn try_add_mul(&self) -> bool {
-        self.inputs
+        self.inputs[1..]
             .iter()
             .map(|_| [Op::Add, Op::Mul])
             .multi_cartesian_product()
@@ -36,7 +36,7 @@ impl Equation {
     }
 
     fn try_any(&self) -> bool {
-        self.inputs
+        self.inputs[1..]
             .iter()
             .map(|_| [Op::Add, Op::Mul, Op::Concat])
             .multi_cartesian_product()
