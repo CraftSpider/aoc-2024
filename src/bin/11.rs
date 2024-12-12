@@ -3,32 +3,12 @@ use std::collections::HashMap;
 
 advent_of_code::solution!(11);
 
-fn to_line(input: &str) -> Vec<u64> {
+fn to_map(input: &str) -> HashMap<u64, u64> {
     input
         .trim()
         .split(" ")
-        .map(|val| val.parse().unwrap())
+        .map(|val| (val.parse().unwrap(), 1))
         .collect()
-}
-
-fn blink(stones: &mut Vec<u64>) {
-    let mut idx = 0;
-    while idx < stones.len() {
-        let val = stones[idx];
-        if val == 0 {
-            stones[idx] = 1;
-        } else if (val.ilog10() + 1) % 2 == 0 {
-            let digits = val.ilog10() + 1;
-            let power = 10u64.pow(digits / 2);
-            stones[idx] = val / power;
-            // This is the expensive part. It keeps needing to shift everything over by one
-            stones.insert(idx + 1, val % power);
-            idx += 1;
-        } else {
-            stones[idx] *= 2024;
-        }
-        idx += 1;
-    }
 }
 
 fn alter(val: u64) -> ArrayVec<u64, 2> {
@@ -43,7 +23,7 @@ fn alter(val: u64) -> ArrayVec<u64, 2> {
     }
 }
 
-fn blink_fast(stones: HashMap<u64, u64>) -> HashMap<u64, u64> {
+fn blink(stones: HashMap<u64, u64>) -> HashMap<u64, u64> {
     let mut out = HashMap::new();
     for (stone, count) in stones {
         for new in alter(stone) {
@@ -54,18 +34,18 @@ fn blink_fast(stones: HashMap<u64, u64>) -> HashMap<u64, u64> {
     out
 }
 
-pub fn part_one(input: &str) -> Option<u32> {
-    let mut stones = to_line(input);
+pub fn part_one(input: &str) -> Option<u64> {
+    let mut stones = to_map(input);
     for _ in 0..25 {
-        blink(&mut stones);
+        stones = blink(stones);
     }
-    Some(stones.len() as u32)
+    Some(stones.values().copied().sum())
 }
 
 pub fn part_two(input: &str) -> Option<u64> {
-    let mut stones = HashMap::from_iter(to_line(input).into_iter().map(|v| (v, 1)));
+    let mut stones = to_map(input);
     for _ in 0..75 {
-        stones = blink_fast(stones);
+        stones = blink(stones);
     }
     Some(stones.values().copied().sum())
 }
@@ -78,15 +58,6 @@ mod tests {
     fn test_part_one() {
         let result = part_one(&advent_of_code::template::read_file("examples", DAY));
         assert_eq!(result, Some(55312));
-    }
-
-    #[test]
-    fn test_example_2() {
-        let mut init = to_line(&advent_of_code::template::read_file_part(
-            "examples", DAY, 2,
-        ));
-        blink(&mut init);
-        assert_eq!(&init, &[1, 2024, 1, 0, 9, 9, 2021976]);
     }
 
     #[test]
