@@ -1,4 +1,4 @@
-use advent_of_code::Direction;
+use advent_of_code::Cardinal;
 use numeric::compound::vector::Vec2;
 use std::collections::HashSet;
 
@@ -15,7 +15,7 @@ impl Map {
     fn start_state(&self) -> GuardState {
         GuardState {
             pos: self.guard,
-            direction: Direction::Up,
+            direction: Cardinal::Up,
             extra_block: None,
         }
     }
@@ -24,7 +24,7 @@ impl Map {
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 struct GuardState {
     pos: Vec2<u32>,
-    direction: Direction,
+    direction: Cardinal,
     extra_block: Option<Vec2<u32>>,
 }
 
@@ -85,7 +85,7 @@ impl Map {
     }
 
     #[allow(unused)]
-    fn print_with_paths(&self, block: Vec2<u32>, locs: &HashSet<(Vec2<u32>, Direction)>) {
+    fn print_with_paths(&self, block: Vec2<u32>, locs: &HashSet<(Vec2<u32>, Cardinal)>) {
         for y in (0..=*self.size.y()).rev() {
             for x in 0..=*self.size.x() {
                 if Vec2::new([x, y]) == block {
@@ -93,10 +93,10 @@ impl Map {
                     continue;
                 }
 
-                let up = locs.contains(&(Vec2::new([x, y]), Direction::Up));
-                let down = locs.contains(&(Vec2::new([x, y]), Direction::Down));
-                let left = locs.contains(&(Vec2::new([x, y]), Direction::Left));
-                let right = locs.contains(&(Vec2::new([x, y]), Direction::Right));
+                let up = locs.contains(&(Vec2::new([x, y]), Cardinal::Up));
+                let down = locs.contains(&(Vec2::new([x, y]), Cardinal::Down));
+                let left = locs.contains(&(Vec2::new([x, y]), Cardinal::Left));
+                let right = locs.contains(&(Vec2::new([x, y]), Cardinal::Right));
                 match (up, down, left, right) {
                     (true, true, true, true) => print!("┼"),
                     (true, true, true, false) => print!("├"),

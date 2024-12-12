@@ -26,29 +26,38 @@ pub fn int_u64<'a>() -> Parser!['a, u64] {
 }
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
-pub enum Direction {
-    Up,
-    Down,
-    Right,
-    Left,
+pub enum Diagonal {
+    UpLeft,
+    UpRight,
+    DownRight,
+    DownLeft,
 }
 
-impl Direction {
-    pub fn all() -> [Direction; 4] {
+impl Diagonal {
+    pub fn all() -> [Diagonal; 4] {
         [
-            Direction::Up,
-            Direction::Right,
-            Direction::Down,
-            Direction::Left,
+            Diagonal::UpLeft,
+            Diagonal::UpRight,
+            Diagonal::DownRight,
+            Diagonal::DownLeft,
         ]
     }
 
-    pub fn rotate_right(self) -> Direction {
+    pub const fn rotate_right(self) -> Diagonal {
         match self {
-            Direction::Up => Direction::Right,
-            Direction::Down => Direction::Left,
-            Direction::Left => Direction::Up,
-            Direction::Right => Direction::Down,
+            Diagonal::UpLeft => Diagonal::UpRight,
+            Diagonal::UpRight => Diagonal::DownRight,
+            Diagonal::DownRight => Diagonal::DownLeft,
+            Diagonal::DownLeft => Diagonal::UpLeft,
+        }
+    }
+
+    pub fn cardinals(self) -> [Cardinal; 2] {
+        match self {
+            Diagonal::UpLeft => [Cardinal::Up, Cardinal::Left],
+            Diagonal::UpRight => [Cardinal::Up, Cardinal::Right],
+            Diagonal::DownRight => [Cardinal::Down, Cardinal::Right],
+            Diagonal::DownLeft => [Cardinal::Down, Cardinal::Left],
         }
     }
 
@@ -57,10 +66,54 @@ impl Direction {
         pos: Vec2<I>,
     ) -> Option<Vec2<I>> {
         match self {
-            Direction::Up => pos.checked_add(Vec2::new([I::zero(), I::one()])),
-            Direction::Down => pos.checked_sub(Vec2::new([I::zero(), I::one()])),
-            Direction::Right => pos.checked_add(Vec2::new([I::one(), I::zero()])),
-            Direction::Left => pos.checked_sub(Vec2::new([I::one(), I::zero()])),
+            Diagonal::UpLeft => pos
+                .checked_add(Vec2::new([I::zero(), I::one()]))?
+                .checked_sub(Vec2::new([I::one(), I::zero()])),
+            Diagonal::UpRight => pos.checked_add(Vec2::new([I::one(), I::one()])),
+            Diagonal::DownRight => pos
+                .checked_add(Vec2::new([I::one(), I::zero()]))?
+                .checked_sub(Vec2::new([I::zero(), I::one()])),
+            Diagonal::DownLeft => pos.checked_sub(Vec2::new([I::one(), I::one()])),
+        }
+    }
+}
+
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
+pub enum Cardinal {
+    Up,
+    Down,
+    Right,
+    Left,
+}
+
+impl Cardinal {
+    pub fn all() -> [Cardinal; 4] {
+        [
+            Cardinal::Up,
+            Cardinal::Right,
+            Cardinal::Down,
+            Cardinal::Left,
+        ]
+    }
+
+    pub const fn rotate_right(self) -> Cardinal {
+        match self {
+            Cardinal::Up => Cardinal::Right,
+            Cardinal::Down => Cardinal::Left,
+            Cardinal::Left => Cardinal::Up,
+            Cardinal::Right => Cardinal::Down,
+        }
+    }
+
+    pub fn try_move<I: Integral + CheckedAdd<Output = I> + CheckedSub<Output = I>>(
+        self,
+        pos: Vec2<I>,
+    ) -> Option<Vec2<I>> {
+        match self {
+            Cardinal::Up => pos.checked_add(Vec2::new([I::zero(), I::one()])),
+            Cardinal::Down => pos.checked_sub(Vec2::new([I::zero(), I::one()])),
+            Cardinal::Right => pos.checked_add(Vec2::new([I::one(), I::zero()])),
+            Cardinal::Left => pos.checked_sub(Vec2::new([I::one(), I::zero()])),
         }
     }
 }

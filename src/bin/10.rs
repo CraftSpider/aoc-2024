@@ -1,4 +1,4 @@
-use advent_of_code::Direction;
+use advent_of_code::Cardinal;
 use numeric::compound::vector::Vec2;
 use std::collections::{HashMap, HashSet};
 
@@ -40,7 +40,7 @@ impl Map {
         self.topography[*pos.y()][*pos.x()]
     }
 
-    fn try_move(&self, dir: Direction, pos: Vec2<usize>) -> Option<Vec2<usize>> {
+    fn try_move(&self, dir: Cardinal, pos: Vec2<usize>) -> Option<Vec2<usize>> {
         let next = dir.try_move(pos)?;
         if next.x() < self.size.x() && next.y() < self.size.y() {
             Some(next)
@@ -59,7 +59,7 @@ fn find_ends(map: &Map, start: Vec2<usize>) -> Vec<Vec2<usize>> {
             return;
         }
 
-        for dir in Direction::all() {
+        for dir in Cardinal::all() {
             let Some(pos) = map.try_move(dir, pos) else {
                 continue;
             };
