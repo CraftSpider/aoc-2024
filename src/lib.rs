@@ -3,6 +3,7 @@ use numeric::compound::vector::Vec2;
 use numeric::traits::class::Integral;
 use numeric::traits::ops::checked::{CheckedAdd, CheckedSub};
 use std::str::FromStr;
+use chumsky::prelude::just;
 
 pub mod fast_cartesian;
 mod size_hint;
@@ -13,7 +14,7 @@ pub mod template;
 #[macro_export]
 macro_rules! Parser {
     ($lt:lifetime, $ty:ty) => {
-        impl chumsky::Parser<$lt, &$lt str, $ty, chumsky::extra::Err<chumsky::error::Rich<$lt, char>>>
+        impl chumsky::Parser<$lt, &$lt str, $ty, chumsky::extra::Err<chumsky::error::Rich<$lt, char>>> + Clone
     };
 }
 
@@ -23,6 +24,11 @@ pub fn int_u32<'a>() -> Parser!['a, u32] {
 
 pub fn int_u64<'a>() -> Parser!['a, u64] {
     text::int(10).map(u64::from_str).unwrapped()
+}
+
+pub fn int_i64<'a>() -> Parser!['a, i64] {
+    just('-').or_not().then(text::int(10).map(i64::from_str).unwrapped())
+        .map(|(neg, val)| if neg.is_some() { -val } else { val })
 }
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
