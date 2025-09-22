@@ -122,4 +122,38 @@ impl Cardinal {
             Cardinal::Left => pos.checked_sub(Vec2::new([I::one(), I::zero()])),
         }
     }
+
+    pub fn unit(self) -> Vec2<isize> {
+        match self {
+            Cardinal::Up => Vec2::from_xy(0, 1),
+            Cardinal::Down => Vec2::from_xy(0, -1),
+            Cardinal::Right => Vec2::from_xy(1, 0),
+            Cardinal::Left => Vec2::from_xy(-1, 0),
+        }
+    }
+}
+
+pub trait VecExt {
+    type Signed;
+
+    fn add_signed(self, rhs: Self::Signed) -> Self;
+    fn sub_signed(self, rhs: Self::Signed) -> Self;
+}
+
+impl VecExt for Vec2<usize> {
+    type Signed = Vec2<isize>;
+
+    fn add_signed(self, rhs: Self::Signed) -> Self {
+        Vec2::from_xy(
+            self.x().saturating_add_signed(*rhs.x()),
+            self.y().saturating_add_signed(*rhs.y()),
+        )
+    }
+
+    fn sub_signed(self, rhs: Self::Signed) -> Self {
+        Vec2::from_xy(
+            self.x().saturating_sub_signed(*rhs.x()),
+            self.y().saturating_sub_signed(*rhs.y()),
+        )
+    }
 }
