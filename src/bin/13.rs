@@ -1,4 +1,4 @@
-use std::cmp::{min};
+use std::cmp::min;
 use numeric::compound::vector::Vec2;
 use advent_of_code::{int_u64, Parser};
 use chumsky::Parser;
@@ -34,38 +34,44 @@ fn parser<'a>() -> Parser!['a, Vec<(Vec2<u64>, Vec2<u64>, Vec2<u64>)>] {
 
 }
 
-fn solve(goal: Vec2<u64>, a: Vec2<u64>, b: Vec2<u64>) -> Vec<Vec2<u64>> {
-    let mut solutions = Vec::new();
+struct SolutionIter {
+    a: Vec2<u64>,
+    b: Vec2<u64>,
+    goal: Vec2<u64>,
+    i: u64,
+    end: u64,
+}
 
-    for i in 0..100 {
-        for j in 0..100 {
-            if a*i + b*j == goal {
-                solutions.push(Vec2::new([i, j]))
+impl Iterator for SolutionIter {
+    type Item = Vec2<u64>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        loop {
+            if self.i > self.end {
+                return None;
+            }
+            let new_goal = self.goal - self.a * self.i;
+            self.i += 1;
+            if new_goal % self.b != Vec2::zero() { continue; }
+            let solution = new_goal / self.b;
+            if solution.x() == solution.y() {
+                return Some(Vec2::from_xy(self.i-1, *solution.x()))
             }
         }
     }
+}
 
-    solutions
-
+fn solutions(goal: Vec2<u64>, a: Vec2<u64>, b: Vec2<u64>) -> impl Iterator<Item=Vec2<u64>> {
     // X1, X2, Y1, Y2, XF, YF
     // XF = A*X1 + B*X2
     // YF = A*Y1 + B*Y2
     // A <= 100, B <= 100
     // We are given _F, _1, _2
 
-    // let end = min(goal.x() / a.x(), goal.y() / a.y());
-    //
-    // for i in 0..end {
-    //     let new_goal = goal - a*i;
-    //     if new_goal % b != Vec2::zero() {
-    //         continue;
-    //     }
-    //     let solution = new_goal / b;
-    //     if solution.x() == solution.y() {
-    //         solutions.push(Vec2::new([i, *solution.x()]));
-    //     }
-    // }
-    // solutions
+    // Diophantine equation solving lets us generate new solutions if we can find one.
+
+    let end = min(goal.x() / a.x(), goal.y() / a.y());
+    SolutionIter { a, b, goal, end, i: 0 }
 }
 
 pub fn part_one(input: &str) -> Option<u64> {
@@ -74,8 +80,7 @@ pub fn part_one(input: &str) -> Option<u64> {
 
     let mut out = 0;
     for (a, b, goal) in machines {
-        let solutions = solve(goal, a, b);
-        out += solutions.iter()
+        out += solutions(goal, a, b)
             .map(|presses| presses.x() * 3 + presses.y())
             .min()
             .unwrap_or(0);
@@ -90,8 +95,7 @@ pub fn part_two(input: &str) -> Option<u64> {
     // let mut out = 0;
     // for (a, b, mut goal) in machines {
     //     goal += 10000000000000;
-    //     let solutions = solve(goal, a, b);
-    //     out += solutions.iter()
+    //     out += solutions(goal, a, b)
     //         .map(|presses| presses.x() * 3 + presses.y())
     //         .min()
     //         .unwrap_or(0);
